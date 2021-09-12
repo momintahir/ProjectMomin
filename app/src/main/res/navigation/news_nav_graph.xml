@@ -8,7 +8,11 @@
     <fragment
         android:id="@+id/breakingNewsFragment"
         android:name="com.example.projectmomin.ui.fragments.BreakingNewsFragment"
-        android:label="fragment_breaking_news" />
+        android:label="fragment_breaking_news" >
+        <action
+            android:id="@+id/action_breakingNewsFragment_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
+    </fragment>
     <fragment
         android:id="@+id/savedNewsFragment"
         android:name="com.example.projectmomin.ui.fragments.SavedNewsFragment"
@@ -19,4 +23,9 @@
         android:name="com.example.projectmomin.ui.fragments.SearchNewsFragment"
         android:label="fragment_search_news"
         />
+    <fragment
+        android:id="@+id/webViewFragment"
+        android:name="com.example.projectmomin.ui.fragments.WebViewFragment"
+        android:label="fragment_web_view"
+        tools:layout="@layout/fragment_web_view" />
 </navigation>

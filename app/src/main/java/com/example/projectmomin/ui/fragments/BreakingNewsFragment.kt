@@ -16,16 +16,17 @@ import com.example.projectmomin.ui.MainActivity
 import com.example.projectmomin.ui.NewsViewModel
 import com.example.projectmomin.ui.NewsViewModelProviderFactory
 import com.example.projectmomin.util.Resource
-import kotlinx.android.synthetic.main.fragment_breaking_news.view.*
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import com.example.projectmomin.db.NewsDatabase
 import com.example.projectmomin.repositories.NewsRepository
+import kotlinx.android.synthetic.main.fragment_breaking_news.view.*
 
 
 class BreakingNewsFragment : Fragment() {
 
     lateinit var viewModel: NewsViewModel
-    internal lateinit var newsAdapter: NewsAdapter
+    private lateinit var newsAdapter: NewsAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -53,7 +54,17 @@ class BreakingNewsFragment : Fragment() {
 
         })
 
+
         setupRecyclerView(view)
+        newsAdapter.setOnItemClickListener(object : NewsAdapter.OnItemClickListener {
+            override fun onItemClick(position: Int, article: Article) {
+                val bundle = Bundle()
+                bundle.putParcelable("article", article)
+                Navigation.findNavController(view)
+                    .navigate(R.id.action_breakingNewsFragment_to_webViewFragment, bundle)
+
+            }
+        })
         return view;
     }
 
@@ -64,4 +75,5 @@ class BreakingNewsFragment : Fragment() {
             layoutManager = LinearLayoutManager(activity)
         }
     }
+
 }

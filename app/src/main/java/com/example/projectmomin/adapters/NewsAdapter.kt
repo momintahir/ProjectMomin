@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.item_article.view.*
 
 internal class NewsAdapter :
     RecyclerView.Adapter<NewsAdapter.MyViewHolder>() {
+     private lateinit var onItemClickListener: OnItemClickListener
 
     private val differCallback = object : DiffUtil.ItemCallback<Article>() {
         override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
@@ -45,8 +46,17 @@ internal class NewsAdapter :
             tvPublishedAt.text = article.publishedAt
             Glide.with(this).load(article.urlToImage).into(ivArticleImage)
         }
+        holder.itemView.setOnClickListener {
+            onItemClickListener.onItemClick(position,article)
+        }
 
+    }
+    fun setOnItemClickListener(onItemClickListener: OnItemClickListener) {
+        this.onItemClickListener = onItemClickListener
+    }
 
+    interface OnItemClickListener {
+        fun onItemClick(position: Int,article: Article)
     }
 
     override fun getItemCount() = differ.currentList.size
