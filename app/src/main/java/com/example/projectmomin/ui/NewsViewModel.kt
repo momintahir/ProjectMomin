@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.projectmomin.models.Article
 import com.example.projectmomin.models.NewsResponse
 import com.example.projectmomin.repositories.NewsRepository
 import com.example.projectmomin.util.Resource
@@ -13,23 +14,17 @@ import java.io.IOException
 
 class NewsViewModel(
     app: Application,
-    val newsRepository: NewsRepository
+    private val newsRepository: NewsRepository
 ) : AndroidViewModel(app) {
 
     val breakingNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
     val searchNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
 
-    init {
-        getBreakingNews()
-    }
-
-
-    fun getSearchedNews(query:String) = viewModelScope.launch {
+    fun getSearchedNews(query: String) = viewModelScope.launch {
         searchNews.postValue(Resource.Loading())
-        val response=newsRepository.getSearchNews(query)
+        val response = newsRepository.getSearchNews(query)
         searchNews.postValue(Resource.Success(response))
     }
-
 
     fun getBreakingNews() = viewModelScope.launch {
         breakingNews.postValue(Resource.Loading())
@@ -44,4 +39,9 @@ class NewsViewModel(
             }
         }
     }
+
+    fun saveArticle(article: Article) = viewModelScope.launch {
+        newsRepository.upsert(article)
+    }
+    fun getSavedNews()=newsRepository.getSavedNews()
 }

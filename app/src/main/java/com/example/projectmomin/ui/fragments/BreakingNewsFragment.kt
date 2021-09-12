@@ -34,7 +34,7 @@ class BreakingNewsFragment : Fragment() {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_breaking_news, container, false)
         viewModel = (activity as MainActivity).viewModel
-
+        viewModel.getBreakingNews()
         viewModel.breakingNews.observe(viewLifecycleOwner, Observer { response ->
             when (response) {
                 is Resource.Success -> {
