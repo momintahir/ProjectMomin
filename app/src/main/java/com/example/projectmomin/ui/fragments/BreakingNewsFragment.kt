@@ -26,7 +26,6 @@ class BreakingNewsFragment : Fragment() {
 
     lateinit var viewModel: NewsViewModel
     internal lateinit var newsAdapter: NewsAdapter
-    val articleList = arrayListOf<Article>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,9 +38,7 @@ class BreakingNewsFragment : Fragment() {
             when (response) {
                 is Resource.Success -> {
                     response.data?.let { newsResponse ->
-                        articleList.addAll(newsResponse.articles)
-                        newsAdapter.notifyDataSetChanged()
-
+                        newsAdapter.differ.submitList(newsResponse.articles)
                     }
                 }
                 is Resource.Error -> {
@@ -57,20 +54,11 @@ class BreakingNewsFragment : Fragment() {
         })
 
         setupRecyclerView(view)
-
-
-
         return view;
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-    }
-
-
     private fun setupRecyclerView(view: View) {
-        newsAdapter = NewsAdapter(articleList, requireContext())
+        newsAdapter = NewsAdapter()
         view.recyclerView.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)

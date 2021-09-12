@@ -17,10 +17,19 @@ class NewsViewModel(
 ) : AndroidViewModel(app) {
 
     val breakingNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
+    val searchNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
 
     init {
         getBreakingNews()
     }
+
+
+    fun getSearchedNews(query:String) = viewModelScope.launch {
+        searchNews.postValue(Resource.Loading())
+        val response=newsRepository.getSearchNews(query)
+        searchNews.postValue(Resource.Success(response))
+    }
+
 
     fun getBreakingNews() = viewModelScope.launch {
         breakingNews.postValue(Resource.Loading())
@@ -28,22 +37,11 @@ class NewsViewModel(
             val response = newsRepository.getBreakingNews()
             breakingNews.postValue(Resource.Success(response))
 
-        } catch(t: Throwable) {
-            when(t) {
+        } catch (t: Throwable) {
+            when (t) {
                 is IOException -> breakingNews.postValue(Resource.Error("Network Failure"))
                 else -> breakingNews.postValue(Resource.Error("Conversion Error"))
             }
         }
     }
-
-    private fun handleBreakingNewsResponse(response: Response<NewsResponse>) : Resource<NewsResponse> {
-        if(response.isSuccessful) {
-            response.body()?.let { resultResponse ->
-                return Resource.Success( resultResponse)
-            }
-        }
-        return Resource.Error(response.message())
-    }
-
-
 }
