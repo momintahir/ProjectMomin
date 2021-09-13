@@ -17,10 +17,13 @@ import com.example.projectmomin.ui.NewsViewModel
 import com.example.projectmomin.ui.NewsViewModelProviderFactory
 import com.example.projectmomin.util.Resource
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.example.projectmomin.db.NewsDatabase
 import com.example.projectmomin.repositories.NewsRepository
 import kotlinx.android.synthetic.main.fragment_breaking_news.view.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 
 class BreakingNewsFragment : Fragment() {
@@ -34,7 +37,11 @@ class BreakingNewsFragment : Fragment() {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_breaking_news, container, false)
         viewModel = (activity as MainActivity).viewModel
-        viewModel.getBreakingNews()
+//        viewModel.getBreakingNews()
+
+
+
+
         viewModel.breakingNews.observe(viewLifecycleOwner, Observer { response ->
             when (response) {
                 is Resource.Success -> {
@@ -54,8 +61,13 @@ class BreakingNewsFragment : Fragment() {
 
         })
 
-
         setupRecyclerView(view)
+
+        lifecycleScope.launch {
+            viewModel.listData.collect {myData->
+                newsAdapter.submitData(myData)
+            }
+        }
         newsAdapter.setOnItemClickListener(object : NewsAdapter.OnItemClickListener {
             override fun onItemClick(position: Int, article: Article) {
                 val bundle = Bundle()

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -14,11 +15,10 @@ import com.example.projectmomin.R
 import com.example.projectmomin.models.Article
 import kotlinx.android.synthetic.main.item_article.view.*
 
-internal class NewsAdapter :
-    RecyclerView.Adapter<NewsAdapter.MyViewHolder>() {
-     private lateinit var onItemClickListener: OnItemClickListener
+internal class NewsAdapter : PagingDataAdapter<Article, NewsAdapter.MyViewHolder>(differCallback) {
+    private lateinit var onItemClickListener: OnItemClickListener
 
-    private val differCallback = object : DiffUtil.ItemCallback<Article>() {
+    object differCallback : DiffUtil.ItemCallback<Article>() {
         override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
             return oldItem.url == newItem.url
         }
@@ -39,25 +39,24 @@ internal class NewsAdapter :
     }
 
     override fun onBindViewHolder(holder: NewsAdapter.MyViewHolder, position: Int) {
-        val article = differ.currentList[position]
         holder.itemView.apply {
-            tvTitle.text = article.title
-            tvSource.text = article.source.name
-            tvPublishedAt.text = article.publishedAt
-            Glide.with(this).load(article.urlToImage).into(ivArticleImage)
+            tvTitle.text = getItem(position)!!.title
+            tvSource.text = getItem(position)!!.source.name
+            tvPublishedAt.text = getItem(position)!!.publishedAt
+            tvDescription.text = getItem(position)!!.description
+            Glide.with(this).load(getItem(position)!!.urlToImage).into(ivArticleImage)
         }
         holder.itemView.setOnClickListener {
-            onItemClickListener.onItemClick(position,article)
+            onItemClickListener.onItemClick(position, getItem(position)!!)
         }
 
     }
+
     fun setOnItemClickListener(onItemClickListener: OnItemClickListener) {
         this.onItemClickListener = onItemClickListener
     }
 
     interface OnItemClickListener {
-        fun onItemClick(position: Int,article: Article)
+        fun onItemClick(position: Int, article: Article)
     }
-
-    override fun getItemCount() = differ.currentList.size
 }

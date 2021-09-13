@@ -7,8 +7,8 @@ import com.example.projectmomin.models.Article
 class NewsRepository(
     val db: NewsDatabase
 ) {
-    suspend fun getBreakingNews() =
-        RetrofitInstance.api.getBreakingNews("us")
+//    suspend fun getBreakingNews() =
+//        RetrofitInstance.api.getBreakingNews("us")
 
     suspend fun getSearchNews(query: String) =
         RetrofitInstance.api.getSearchNews(query)

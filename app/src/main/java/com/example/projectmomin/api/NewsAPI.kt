@@ -20,9 +20,10 @@ interface NewsAPI {
     suspend fun getBreakingNews(
         @Query("q")
         q: String,
+        @Query("page")
+        page:Int,
         @Query("apiKey")
         apiKey: String = API_KEY
-
     ): NewsResponse
 
 }
