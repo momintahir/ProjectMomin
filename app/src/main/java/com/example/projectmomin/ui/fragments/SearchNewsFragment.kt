@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.projectmomin.R
@@ -18,6 +19,7 @@ import com.example.projectmomin.ui.NewsViewModel
 import com.example.projectmomin.util.Resource
 import kotlinx.android.synthetic.main.fragment_search_news.view.*
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 
@@ -47,24 +49,32 @@ class SearchNewsFragment : Fragment() {
             }
         })
 
-        viewModel.searchNews.observe(viewLifecycleOwner, Observer { response ->
-            when (response) {
-                is Resource.Success -> {
-                    response.data?.let { newsResponse ->
-                        newsAdapter.differ.submitList(newsResponse.articles)
+        lifecycleScope.launchWhenStarted {
+            viewModel.searchNews.collect { response ->
+                when (response) {
+                    is Resource.Success -> {
+                        response.data?.let { newsResponse ->
+                            newsAdapter.differ.submitList(newsResponse.articles)
+                        }
                     }
-                }
-                is Resource.Error -> {
-                    response.message?.let { message ->
-                        Toast.makeText(activity, "An error occured: $message", Toast.LENGTH_LONG)
-                            .show()
+                    is Resource.Error -> {
+                        response.message?.let { message ->
+                            Toast.makeText(
+                                activity,
+                                "An error occured: $message",
+                                Toast.LENGTH_LONG
+                            )
+                                .show()
+                        }
                     }
-                }
-                is Resource.Loading -> {
+                    is Resource.Loading -> {
+                    }
                 }
             }
 
-        })
+        }
+
+
 
         setupRecyclerView(view)
         return view

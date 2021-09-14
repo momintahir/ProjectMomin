@@ -42,28 +42,28 @@ class BreakingNewsFragment : Fragment() {
 
 
 
-        viewModel.breakingNews.observe(viewLifecycleOwner, Observer { response ->
-            when (response) {
-                is Resource.Success -> {
-                    response.data?.let { newsResponse ->
-                        newsAdapter.differ.submitList(newsResponse.articles)
-                    }
-                }
-                is Resource.Error -> {
-                    response.message?.let { message ->
-                        Toast.makeText(activity, "An error occured: $message", Toast.LENGTH_LONG)
-                            .show()
-                    }
-                }
-                is Resource.Loading -> {
-                }
-            }
-
-        })
+//        viewModel.breakingNews.observe(viewLifecycleOwner, Observer { response ->
+//            when (response) {
+//                is Resource.Success -> {
+//                    response.data?.let { newsResponse ->
+//                        newsAdapter.differ.submitList(newsResponse.articles)
+//                    }
+//                }
+//                is Resource.Error -> {
+//                    response.message?.let { message ->
+//                        Toast.makeText(activity, "An error occured: $message", Toast.LENGTH_LONG)
+//                            .show()
+//                    }
+//                }
+//                is Resource.Loading -> {
+//                }
+//            }
+//
+//        })
 
         setupRecyclerView(view)
 
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenStarted {
             viewModel.listData.collect {myData->
                 newsAdapter.submitData(myData)
             }

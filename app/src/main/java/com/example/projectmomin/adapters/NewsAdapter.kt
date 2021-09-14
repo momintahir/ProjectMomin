@@ -52,6 +52,7 @@ internal class NewsAdapter : PagingDataAdapter<Article, NewsAdapter.MyViewHolder
 
     }
 
+
     fun setOnItemClickListener(onItemClickListener: OnItemClickListener) {
         this.onItemClickListener = onItemClickListener
     }

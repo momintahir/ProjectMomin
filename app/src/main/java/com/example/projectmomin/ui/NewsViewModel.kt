@@ -12,6 +12,7 @@ import com.example.projectmomin.models.Article
 import com.example.projectmomin.models.NewsResponse
 import com.example.projectmomin.repositories.NewsRepository
 import com.example.projectmomin.util.Resource
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.io.IOException
@@ -22,12 +23,12 @@ class NewsViewModel(
 ) : AndroidViewModel(app) {
 
     val breakingNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
-    val searchNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
+    val searchNews: MutableStateFlow<Resource<NewsResponse>> = MutableStateFlow(Resource.Empty())
 
     fun getSearchedNews(query: String) = viewModelScope.launch {
-        searchNews.postValue(Resource.Loading())
+        searchNews.value = Resource.Loading()
         val response = newsRepository.getSearchNews(query)
-        searchNews.postValue(Resource.Success(response))
+        searchNews.value = Resource.Success(response)
     }
 
 //    fun getBreakingNews() = viewModelScope.launch {
@@ -51,5 +52,6 @@ class NewsViewModel(
     fun saveArticle(article: Article) = viewModelScope.launch {
         newsRepository.upsert(article)
     }
-    fun getSavedNews()=newsRepository.getSavedNews()
+
+    fun getSavedNews() = newsRepository.getSavedNews()
 }
