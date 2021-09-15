@@ -8,18 +8,19 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.example.projectmomin.adapters.ArticlePagingSource
-import com.example.projectmomin.models.Article
 import com.example.projectmomin.models.NewsResponse
 import com.example.projectmomin.repositories.NewsRepository
 import com.example.projectmomin.util.Resource
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import retrofit2.Response
-import java.io.IOException
+import javax.inject.Inject
 
-class NewsViewModel(
+@HiltViewModel
+class NewsViewModel @Inject constructor(
     app: Application,
-    private val newsRepository: NewsRepository
+    private val newsRepository: NewsRepository,
+    private val articlePagingSource: ArticlePagingSource
 ) : AndroidViewModel(app) {
 
     val breakingNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
@@ -28,6 +29,7 @@ class NewsViewModel(
     fun getSearchedNews(query: String) = viewModelScope.launch {
         searchNews.value = Resource.Loading()
         val response = newsRepository.getSearchNews(query)
+        print(response.toString())
         searchNews.value = Resource.Success(response)
     }
 
@@ -46,12 +48,11 @@ class NewsViewModel(
 //    }
 
     val listData = Pager(PagingConfig(pageSize = 6)) {
-        ArticlePagingSource()
-    }.flow.cachedIn(viewModelScope)
+       articlePagingSource }.flow.cachedIn(viewModelScope)
 
-    fun saveArticle(article: Article) = viewModelScope.launch {
-        newsRepository.upsert(article)
-    }
+//    fun saveArticle(article: Article) = viewModelScope.launch {
+//        newsRepository.upsert(article)
+//    }
 
-    fun getSavedNews() = newsRepository.getSavedNews()
+//    fun getSavedNews() = newsRepository.getSavedNews()
 }

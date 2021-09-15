@@ -25,10 +25,10 @@ class SavedNewsFragment : Fragment() {
         // Inflate the layout for this fragment
         val view= inflater.inflate(R.layout.fragment_saved_news, container, false)
         viewModel = (activity as MainActivity).viewModel
-
-        viewModel.getSavedNews().observe(viewLifecycleOwner, Observer {
-            newsAdapter.differ.submitList(it)
-        })
+//
+//        viewModel.getSavedNews().observe(viewLifecycleOwner, Observer {
+//            newsAdapter.differ.submitList(it)
+//        })
         setupRecyclerView(view)
         return view
     }

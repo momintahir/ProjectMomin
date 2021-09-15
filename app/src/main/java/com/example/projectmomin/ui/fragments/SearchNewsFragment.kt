@@ -14,6 +14,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.projectmomin.R
 import com.example.projectmomin.adapters.NewsAdapter
+import com.example.projectmomin.adapters.SearchNewsAdapter
 import com.example.projectmomin.ui.MainActivity
 import com.example.projectmomin.ui.NewsViewModel
 import com.example.projectmomin.util.Resource
@@ -26,7 +27,7 @@ import kotlinx.coroutines.launch
 class SearchNewsFragment : Fragment() {
 
     lateinit var viewModel: NewsViewModel
-    internal lateinit var newsAdapter: NewsAdapter
+    internal lateinit var newsAdapter: SearchNewsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +36,10 @@ class SearchNewsFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_search_news, container, false)
         viewModel = (activity as MainActivity).viewModel
+
+        setupRecyclerView(view)
+
+
         view.etSearchText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
 
@@ -49,8 +54,9 @@ class SearchNewsFragment : Fragment() {
             }
         })
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.searchNews.collect { response ->
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.searchNews.collect { response->
                 when (response) {
                     is Resource.Success -> {
                         response.data?.let { newsResponse ->
@@ -71,17 +77,13 @@ class SearchNewsFragment : Fragment() {
                     }
                 }
             }
-
         }
 
-
-
-        setupRecyclerView(view)
         return view
     }
 
     private fun setupRecyclerView(view: View) {
-        newsAdapter = NewsAdapter()
+        newsAdapter = SearchNewsAdapter()
         view.recyclerView.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)

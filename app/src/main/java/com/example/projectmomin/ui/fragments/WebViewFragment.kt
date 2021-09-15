@@ -40,8 +40,8 @@ class WebViewFragment : Fragment() {
         if (tvSave != null) {
             tvSave.visibility = View.VISIBLE
             tvSave.setOnClickListener {
-                val value=viewModel.saveArticle(article)
-                Log.d("ROOMDB","saved successfully $value")
+//                val value=viewModel.saveArticle(article)
+//                Log.d("ROOMDB","saved successfully $value")
             }
         }
         return view

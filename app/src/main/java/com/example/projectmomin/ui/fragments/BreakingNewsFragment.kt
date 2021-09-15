@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 
+
 class BreakingNewsFragment : Fragment() {
 
     lateinit var viewModel: NewsViewModel

@@ -2,6 +2,8 @@ package com.example.projectmomin.api
 
 import com.example.projectmomin.models.NewsResponse
 import com.example.projectmomin.util.Constants.Companion.API_KEY
+import okhttp3.ResponseBody
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -25,5 +27,8 @@ interface NewsAPI {
         @Query("apiKey")
         apiKey: String = API_KEY
     ): NewsResponse
+
+    @GET("entries")
+    suspend fun getTest(): Call<ResponseBody>
 
 }
