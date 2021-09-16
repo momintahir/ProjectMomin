@@ -3,6 +3,7 @@ package com.example.projectmomin.ui
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -26,6 +27,9 @@ class NewsViewModel @Inject constructor(
     val breakingNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
     val searchNews: MutableStateFlow<Resource<NewsResponse>> = MutableStateFlow(Resource.Empty())
 
+    val newsList=newsRepository.getArticles("us",1).asLiveData()
+
+
     fun getSearchedNews(query: String) = viewModelScope.launch {
         searchNews.value = Resource.Loading()
         val response = newsRepository.getSearchNews(query)
@@ -47,8 +51,9 @@ class NewsViewModel @Inject constructor(
 //        }
 //    }
 
-    val listData = Pager(PagingConfig(pageSize = 6)) {
-       articlePagingSource }.flow.cachedIn(viewModelScope)
+
+//    val listData = Pager(PagingConfig(pageSize = 6)) {
+//       articlePagingSource }.flow.cachedIn(viewModelScope)
 
 //    fun saveArticle(article: Article) = viewModelScope.launch {
 //        newsRepository.upsert(article)

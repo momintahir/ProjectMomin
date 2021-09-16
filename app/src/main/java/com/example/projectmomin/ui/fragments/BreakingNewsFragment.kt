@@ -64,10 +64,14 @@ class BreakingNewsFragment : Fragment() {
 
         setupRecyclerView(view)
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.listData.collect {myData->
-                newsAdapter.submitData(myData)
-            }
+//        lifecycleScope.launchWhenStarted {
+//            viewModel.listData.collect {myData->
+//                newsAdapter.submitData(myData)
+//            }
+//        }
+
+        viewModel.newsList.observe(viewLifecycleOwner){
+            newsAdapter.differ.submitList(it.data)
         }
         newsAdapter.setOnItemClickListener(object : NewsAdapter.OnItemClickListener {
             override fun onItemClick(position: Int, article: Article) {

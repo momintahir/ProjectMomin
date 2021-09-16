@@ -41,7 +41,7 @@ internal class NewsAdapter : PagingDataAdapter<Article, NewsAdapter.MyViewHolder
     override fun onBindViewHolder(holder: NewsAdapter.MyViewHolder, position: Int) {
         holder.itemView.apply {
             tvTitle.text = getItem(position)!!.title
-            tvSource.text = getItem(position)!!.source.name
+            tvSource.text = getItem(position)!!.source!!.name
             tvPublishedAt.text = getItem(position)!!.publishedAt
             tvDescription.text = getItem(position)!!.description
             Glide.with(this).load(getItem(position)!!.urlToImage).into(ivArticleImage)

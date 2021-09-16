@@ -27,8 +27,4 @@ interface NewsAPI {
         @Query("apiKey")
         apiKey: String = API_KEY
     ): NewsResponse
-
-    @GET("entries")
-    suspend fun getTest(): Call<ResponseBody>
-
 }

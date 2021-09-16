@@ -14,10 +14,10 @@ data class Article(
     @PrimaryKey
     val url: String,
     val author: String?,
-    val content: String,
-    val description: String,
-    val publishedAt: String,
-    val source: @RawValue Source,
-    val title: String,
-    val urlToImage: String
+    val content: String?,
+    val description: String?,
+    val publishedAt: String?,
+    val source: @RawValue Source?,
+    val title: String?,
+    val urlToImage: String?
 ) : Parcelable
